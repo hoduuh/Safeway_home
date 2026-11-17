@@ -1,1 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>세이프웨이 SafeWay</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  --blue:#1E5EFF;--blue-d:#1747C7;--sky:#E6F3FF;--sky2:#BFE0FF;--mint:#12B886;--mint-bg:#E3F8F0;
+  --yellow:#FFC83D;--yellow-bg:#FFF6D8;--bg:#FFFFFF;--gray:#F3F5F8;--line:#DDE3EC;--text:#17233A;--sub:#51607A;--red:#D6336C;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#0F1726;--gray:#18233A;--line:#2B3A57;--text:#EEF3FC;--sub:#A9B7D0;--sky:#17304F;--sky2:#24507F;--mint-bg:#0F3A2E;--yellow-bg:#3B3216;--blue:#5B8CFF;--blue-d:#4274F0}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0F1726;--gray:#18233A;--line:#2B3A57;--text:#EEF3FC;--sub:#A9B7D0;--sky:#17304F;--sky2:#24507F;--mint-bg:#0F3A2E;--yellow-bg:#3B3216;--blue:#5B8CFF;--blue-d:#4274F0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans KR","Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;font-size:16px;line-height:1.6}
+button,input,textarea,select{font:inherit;color:inherit}
+.app{max-width:640px;margin:0 auto;padding:0 20px 112px}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px;color:var(--blue)}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--blue);display:grid;place-items:center;font-size:22px}
+.sos{min-height:48px;padding:0 16px;border-radius:24px;border:2px solid var(--red);background:transparent;color:var(--red);font-weight:700;cursor:pointer}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:56px;width:100%;border:0;border-radius:16px;background:var(--blue);color:#fff;font-weight:700;font-size:18px;cursor:pointer}
+.btn:active{background:var(--blue-d)}
+.btn.sub{background:var(--sky);color:var(--blue);min-height:48px;font-size:16px}
+.btn.mint{background:var(--mint)}
+.hero{background:var(--sky);border-radius:24px;padding:28px 22px;text-align:center;margin-top:8px}
+.hero .big{font-size:56px}
+.hero h1{margin:8px 0 6px;font-size:28px;color:var(--blue)}
+.hero p{margin:0 0 20px;color:var(--sub)}
+.tip{background:var(--yellow-bg);border-left:6px solid var(--yellow);border-radius:12px;padding:14px 16px;margin:20px 0;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.stat{background:var(--gray);border-radius:16px;padding:14px 6px;text-align:center}
+.stat b{display:block;font-size:24px;color:var(--blue)}
+.stat span{font-size:14px;color:var(--sub)}
+section.step{background:var(--bg);margin:0 0 20px}
+.step h2{font-size:19px;margin:24px 0 10px;display:flex;align-items:center;gap:8px}
+.num{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-size:15px;display:grid;place-items:center}
+.req{font-size:13px;color:var(--red);font-weight:500}
+.field{width:100%;min-height:48px;border:2px solid var(--line);border-radius:14px;padding:10px 14px;background:var(--bg)}
+.field:focus{outline:3px solid var(--sky2);border-color:var(--blue)}
+textarea.field{min-height:130px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 180px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{min-height:104px;border:2px solid var(--line);border-radius:18px;background:var(--bg);padding:12px 8px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.card .ic{width:48px;height:48px;border-radius:14px;background:var(--yellow-bg);display:grid;place-items:center;font-size:28px}
+.card b{font-size:16px}.card small{color:var(--sub);font-size:13px;line-height:1.3}
+.card[aria-pressed="true"]{border-color:var(--blue);background:var(--sky);box-shadow:0 0 0 3px var(--sky2)}
+.hint{color:var(--sub);font-size:14px;margin:6px 2px}
+.count{text-align:right;color:var(--sub);font-size:14px}
+.thumbs{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.thumb{position:relative;width:96px;height:96px;border-radius:14px;overflow:hidden;background:var(--gray)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb button{position:absolute;top:4px;right:4px;width:32px;height:32px;border:0;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-size:16px;cursor:pointer}
+.err{background:var(--yellow-bg);border:2px solid var(--yellow);border-radius:14px;padding:12px 16px;margin:16px 0;font-weight:500}
+.done{background:var(--mint-bg);border:2px solid var(--mint);border-radius:20px;padding:28px 20px;text-align:center;margin-top:16px}
+.done .big{font-size:56px}.done h2{margin:6px 0;color:var(--mint)}
+.submitbar{position:fixed;left:0;right:0;bottom:calc(64px + env(safe-area-inset-bottom,0px));padding:12px 20px;background:linear-gradient(transparent,var(--bg) 35%)}
+.submitbar .btn{max-width:600px;margin:0 auto}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+nav.tabs button{flex:1;min-height:64px;border:0;background:none;color:var(--sub);font-size:13px;font-weight:500;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+nav.tabs button span{font-size:22px}
+nav.tabs button[aria-current="page"]{color:var(--blue);font-weight:700}
+.map{background:var(--sky);border-radius:18px;width:100%;max-width:380px;height:auto;display:block;margin:0 auto}
+.item{border:1px solid var(--line);border-radius:16px;padding:14px;margin:12px 0;background:var(--bg)}
+.item h3{margin:0 0 4px;font-size:17px;display:flex;gap:8px;align-items:center;justify-content:space-between}
+.item p{margin:6px 0;color:var(--sub)}
+.item .imgs{display:flex;gap:8px;margin-top:8px}.item .imgs img{width:72px;height:72px;object-fit:cover;border-radius:10px}
+.badge{font-size:13px;font-weight:700;padding:4px 10px;border-radius:12px;white-space:nowrap}
+.s0{background:var(--yellow-bg);color:#8A6500}.s1{background:var(--sky);color:var(--blue)}.s2{background:var(--mint-bg);color:#0B8A66}
+.meta{font-size:13px;color:var(--sub)}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:4px 0}
+.chip{min-height:44px;padding:0 16px;border-radius:22px;border:2px solid var(--line);background:var(--bg);white-space:nowrap;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+.modal{position:fixed;inset:0;background:rgba(10,20,40,.55);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.modal.on{display:flex}
+.sheet{background:var(--bg);width:100%;max-width:640px;border-radius:24px 24px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet a{text-decoration:none;margin-bottom:10px}
+.hide{display:none!important}
+@media (min-width:700px){.cards{grid-template-columns:repeat(3,1fr)}.modal{align-items:center}.sheet{border-radius:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand"><div class="logo">🛡️</div>세이프웨이</div>
+    <button class="sos" id="sosBtn" aria-label="긴급 전화">📞 긴급</button>
+  </header>
 
+  <main id="view-home">
+    <div class="hero">
+      <div class="big">🚸</div>
+      <h1>안전하고 친근한 등하굣길</h1>
+      <p>길에서 위험한 곳을 봤나요?<br>알려 주면 모두가 더 안전해져요.</p>
+      <button class="btn" data-go="report">⚠️ 위험 제보하기</button>
+    </div>
+    <div class="tip">💡 <b>이렇게 쓰세요</b><br>① 장소 고르기 → ② 위험 종류 고르기 → ③ 제보하기. 사진은 없어도 괜찮아요!</div>
+    <div class="stats">
+      <div class="stat"><b id="n0">0</b><span>접수됨</span></div>
+      <div class="stat"><b id="n1">0</b><span>확인 중</span></div>
+      <div class="stat"><b id="n2">0</b><span>해결됨</span></div>
+    </div>
+    <button class="btn sub" style="margin-top:20px" data-go="list">🗺️ 친구들이 알려 준 위험 장소 보기</button>
+  </main>
+
+  <main id="view-report" class="hide">
+    <section class="step">
+      <h2><span class="num">1</span>어디가 위험했나요? <span class="req">꼭 필요해요</span></h2>
+      <button class="btn sub" id="gpsBtn">📍 현재 위치 사용</button>
+      <div class="hint" id="gpsMsg">위치를 못 쓰면 아래에 장소 이름을 직접 적어 주세요.</div>
+      <input class="field" id="place" maxlength="80" placeholder="예) ○○초등학교 정문 앞 횡단보도" autocomplete="off">
+    </section>
+    <section class="step">
+      <h2><span class="num">2</span>어떤 위험이에요? <span class="req">꼭 필요해요</span></h2>
+      <div class="cards" id="types"></div>
+    </section>
+    <section class="step">
+      <h2><span class="num">3</span>어떤 상황이었나요?</h2>
+      <textarea class="field" id="desc" maxlength="500" placeholder="언제, 어떤 상황이었는지 적어 주세요."></textarea>
+      <div class="count"><span id="cnt">0</span> / 500자</div>
+    </section>
+    <section class="step">
+      <h2><span class="num">4</span>사진을 올려 볼까요? <span class="meta">(최대 3장)</span></h2>
+      <div class="row">
+        <button class="btn sub" id="camBtn">📷 사진 찍기</button>
+        <button class="btn sub" id="albBtn">🖼️ 앨범에서 고르기</button>
+      </div>
+      <input type="file" id="camIn" accept="image/*" capture="environment" hidden>
+      <input type="file" id="albIn" accept="image/*" multiple hidden>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="hint">얼굴이나 번호판이 나오면 가리거나 빼 주세요.</div>
+    </section>
+    <div id="msg"></div>
+    <div id="doneBox" class="done hide">
+      <div class="big">🎉</div>
+      <h2>제보해 줘서 고마워요!</h2>
+      <p>더 안전한 등하굣길을 만들게요.</p>
+      <button class="btn mint" data-go="list">내 제보 확인하기</button>
+    </div>
+    <div class="submitbar" id="submitbar"><button class="btn" id="submitBtn">📨 제보하기</button></div>
+  </main>
+
+  <main id="view-list" class="hide">
+    <h2 style="margin:8px 0">친구들이 알려 준 위험 장소</h2>
+    <svg class="map" id="map" viewBox="0 0 240 350" role="img" aria-label="한반도 지도에 표시된 제보 위치"></svg>
+    <div class="hint" style="text-align:center">🟡 접수됨 · 🔵 확인 중 · 🟢 해결됨<br>위치를 공유한 제보만 점으로 나타나요.</div>
+    <div class="filters" id="filters"></div>
+    <div id="items"></div>
+  </main>
+</div>
+
+<nav class="tabs">
+  <button data-go="home" aria-current="page"><span>🏠</span>홈</button>
+  <button data-go="report"><span>⚠️</span>제보하기</button>
+  <button data-go="list"><span>🗺️</span>제보 목록</button>
+</nav>
+
+<div class="modal" id="sosModal">
+  <div class="sheet">
+    <h2 style="margin-top:0">📞 긴급할 때 바로 전화해요</h2>
+    <a class="btn" style="background:var(--red)" href="tel:112">🚓 112 경찰</a>
+    <a class="btn" style="background:var(--red)" href="tel:119">🚑 119 소방·구급</a>
+    <button class="btn sub" id="sosClose">닫기</button>
+  </div>
+</div>
+
+<script>
+var TYPES=[
+ {id:"traffic",ic:"🚗",t:"교통 위험",s:"과속 차량, 횡단보도 없음"},
+ {id:"facility",ic:"🚧",t:"시설 파손",s:"보도블록·가로등 고장"},
+ {id:"dark",ic:"🌙",t:"어두운 길",s:"밤에 너무 깜깜해요"},
+ {id:"work",ic:"🏗️",t:"공사 구간",s:"공사로 길이 위험해요"},
+ {id:"stranger",ic:"😨",t:"낯선 사람·불안한 상황",s:"무섭거나 불안했어요"},
+ {id:"etc",ic:"📝",t:"기타",s:"그 밖의 위험"}];
+var STATUS=["접수됨","확인 중","해결됨"];
+var state={type:null,lat:null,lng:null,photos:[],reports:[],filter:-1,db:null,canEdit:false,sending:false};
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function tinfo(id){return TYPES.filter(function(t){return t.id===id})[0]||TYPES[5]}
+
+/* 화면 전환 */
+function go(v){
+  ["home","report","list"].forEach(function(n){$("view-"+n).classList.toggle("hide",n!==v)});
+  document.querySelectorAll("nav.tabs button").forEach(function(b){
+    if(b.dataset.go===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  $("submitbar").classList.toggle("hide",v!=="report");
+  window.scrollTo(0,0);
+  if(v==="report"){$("doneBox").classList.add("hide");$("submitbar").classList.remove("hide")}
+  if(v==="list")renderList();
+}
+document.addEventListener("click",function(e){var g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+$("sosBtn").onclick=function(){$("sosModal").classList.add("on")};
+$("sosClose").onclick=function(){$("sosModal").classList.remove("on")};
+$("sosModal").onclick=function(e){if(e.target===this)this.classList.remove("on")};
+
+/* 위험 유형 카드 */
+TYPES.forEach(function(t){
+  var b=document.createElement("button");b.className="card";b.type="button";b.setAttribute("aria-pressed","false");
+  b.innerHTML='<div class="ic">'+t.ic+'</div><b>'+t.t+'</b><small>'+t.s+'</small>';
+  b.onclick=function(){state.type=t.id;document.querySelectorAll(".card").forEach(function(c){c.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true")};
+  $("types").appendChild(b);
+});
+$("desc").oninput=function(){$("cnt").textContent=this.value.length};
+
+/* 현재 위치 */
+$("gpsBtn").onclick=function(){
+  var m=$("gpsMsg");
+  if(!navigator.geolocation){m.textContent="이 기기에서는 위치를 쓸 수 없어요. 장소 이름을 적어 주세요.";return}
+  m.textContent="위치를 찾는 중이에요…";
+  navigator.geolocation.getCurrentPosition(function(p){
+    state.lat=p.coords.latitude;state.lng=p.coords.longitude;
+    m.innerHTML="✅ 현재 위치를 가져왔어요! 장소 이름도 적어 주면 더 좋아요.";m.style.color="var(--mint)";
+    if(!$("place").value)$("place").value="현재 위치";
+  },function(){m.textContent="위치를 가져오지 못했어요. 장소 이름을 직접 적어 주세요.";m.style.color=""},{enableHighAccuracy:true,timeout:10000});
+};
+
+/* 사진 */
+function shrink(file,max,q){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onerror=rej;
+    r.onload=function(){var im=new Image();im.onerror=rej;im.onload=function(){
+      var k=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");
+      c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+      c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",q))};im.src=r.result};
+    r.readAsDataURL(file);
+  });
+}
+function addFiles(files){
+  var list=Array.prototype.slice.call(files);
+  var left=3-state.photos.length;
+  if(list.length>left){showMsg("사진은 최대 3장까지 올릴 수 있어요.")}
+  list.slice(0,Math.max(0,left)).forEach(function(f){
+    shrink(f,560,0.6).then(function(u){state.photos.push(u);drawThumbs()}).catch(function(){showMsg("사진을 불러오지 못했어요. 다른 사진으로 해 볼까요?")});
+  });
+}
+function drawThumbs(){
+  $("thumbs").innerHTML="";
+  state.photos.forEach(function(u,i){
+    var d=document.createElement("div");d.className="thumb";
+    d.innerHTML='<img alt="첨부 사진 '+(i+1)+'" src="'+u+'"><button type="button" aria-label="사진 삭제">✕</button>';
+    d.querySelector("button").onclick=function(){state.photos.splice(i,1);drawThumbs()};
+    $("thumbs").appendChild(d);
+  });
+}
+$("camBtn").onclick=function(){$("camIn").click()};
+$("albBtn").onclick=function(){$("albIn").click()};
+$("camIn").onchange=function(){addFiles(this.files);this.value=""};
+$("albIn").onchange=function(){addFiles(this.files);this.value=""};
+
+function showMsg(t){$("msg").innerHTML=t?'<div class="err" role="alert">🙏 '+t+'</div>':""}
+
+/* 저장 */
+function save(r){
+  if(state.db){return state.db.collection("reports").doc(r.id).set(r)}
+  try{var a=JSON.parse(localStorage.getItem("sw_reports")||"[]");a.push(r);localStorage.setItem("sw_reports",JSON.stringify(a))}catch(e){return Promise.reject(e)}
+  state.reports.push(r);return Promise.resolve();
+}
+$("submitBtn").onclick=function(){
+  if(state.sending)return;
+  var place=$("place").value.trim(),miss=[];
+  if(!place&&state.lat==null)miss.push("① 위험한 장소");
+  if(!state.type)miss.push("② 위험 종류");
+  if(miss.length){showMsg("아직 "+miss.join(", ")+"을(를) 알려 주지 않았어요. 위로 올라가 선택해 주세요!");return}
+  showMsg("");state.sending=true;$("submitBtn").textContent="보내는 중…";
+  var r={id:"r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),place:place||"현재 위치",type:state.type,desc:$("desc").value.trim(),
+    lat:state.lat,lng:state.lng,photos:state.photos.slice(),status:0,createdAt:Date.now()};
+  save(r).then(function(){
+    $("doneBox").classList.remove("hide");$("submitbar").classList.add("hide");$("doneBox").scrollIntoView({behavior:"smooth"});
+    state.type=null;state.lat=null;state.lng=null;state.photos=[];
+    $("place").value="";$("desc").value="";$("cnt").textContent="0";$("gpsMsg").textContent="위치를 못 쓰면 아래에 장소 이름을 직접 적어 주세요.";$("gpsMsg").style.color="";
+    drawThumbs();document.querySelectorAll(".card").forEach(function(c){c.setAttribute("aria-pressed","false")});
+  }).catch(function(){showMsg("제보를 보내지 못했어요. 사진을 줄이거나 잠시 뒤에 다시 눌러 주세요.")})
+  .then(function(){state.sending=false;$("submitBtn").textContent="📨 제보하기"});
+};
+
+/* 목록 / 지도 */
+function renderFilters(){
+  var f=$("filters");f.innerHTML="";
+  [["전체",-1],["접수됨",0],["확인 중",1],["해결됨",2]].forEach(function(x){
+    var b=document.createElement("button");b.className="chip";b.textContent=x[0];b.setAttribute("aria-pressed",state.filter===x[1]);
+    b.onclick=function(){state.filter=x[1];renderList()};f.appendChild(b)});
+}
+function ago(t){var m=Math.round((Date.now()-t)/60000);if(m<1)return"방금 전";if(m<60)return m+"분 전";var h=Math.round(m/60);if(h<24)return h+"시간 전";return Math.round(h/24)+"일 전"}
+var KR=[[124.3,39.9],[125.0,39.6],[125.3,38.7],[125.5,38.0],[125.4,37.7],[126.6,37.4],[126.2,36.8],[126.5,35.9],[126.3,34.8],[126.5,34.3],[127.7,34.7],[128.0,34.8],[129.1,35.1],[129.4,35.5],[129.5,36.0],[129.4,37.0],[128.9,37.8],[128.6,38.2],[127.5,39.2],[127.6,39.9],[128.5,40.8],[129.8,41.8],[130.7,42.3],[129.5,42.4],[128.1,42.0],[127.5,41.6],[126.9,41.8],[126.0,40.9],[125.3,40.4]];
+function kx(lng){return 20+(lng-124)*27.2}
+function ky(lat){return 5+(43-lat)*34}
+function drawKorea(pts){
+  var s='<rect width="240" height="350" fill="var(--sky)"/>';
+  s+='<text x="36" y="190" fill="var(--sub)" font-size="11" opacity=".7">황해</text><text x="198" y="150" fill="var(--sub)" font-size="11" opacity=\".7\">동해</text>';
+  s+='<polygon points="'+KR.map(function(p){return kx(p[0]).toFixed(1)+","+ky(p[1]).toFixed(1)}).join(" ")+'" fill="var(--bg)" stroke="var(--sky2)" stroke-width="2" stroke-linejoin="round"/>';
+  s+='<ellipse cx="'+kx(126.55)+'" cy="'+ky(33.38)+'" rx="10" ry="4.5" fill="var(--bg)" stroke="var(--sky2)" stroke-width="2"/>';
+  s+='<circle cx="'+kx(130.9)+'" cy="'+ky(37.5)+'" r="2.5" fill="var(--bg)" stroke="var(--sky2)" stroke-width="1.5"/>';
+  s+='<line x1="'+kx(124.7)+'" y1="'+ky(38)+'" x2="'+kx(128.4)+'" y2="'+ky(38.3)+'" stroke="var(--line)" stroke-dasharray="4 4"/>';
+  [["서울",126.98,37.57],["대전",127.38,36.35],["부산",129.07,35.18],["제주",126.55,33.38]].forEach(function(c){
+    s+='<circle cx="'+kx(c[1])+'" cy="'+ky(c[2])+'" r="2" fill="var(--sub)"/><text x="'+(kx(c[1])+5)+'" y="'+(ky(c[2])+4)+'" fill="var(--sub)" font-size="10">'+c[0]+'</text>';
+  });
+  var shown=0;
+  pts.forEach(function(p){
+    if(p.lat<33||p.lat>43||p.lng<124||p.lng>131)return;
+    shown++;
+    s+='<circle cx="'+kx(p.lng).toFixed(1)+'" cy="'+ky(p.lat).toFixed(1)+'" r="7" fill="'+["#FFC83D","#1E5EFF","#12B886"][p.status]+'" stroke="#fff" stroke-width="2.5" opacity=".92"/>';
+  });
+  if(!shown)s+='<text x="120" y="338" text-anchor="middle" fill="var(--sub)" font-size="12">아직 지도에 표시된 제보가 없어요</text>';
+  return s;
+}
+function renderList(){
+  var all=state.reports.slice().sort(function(a,b){return b.createdAt-a.createdAt});
+  for(var s=0;s<3;s++)$("n"+s).textContent=all.filter(function(r){return r.status===s}).length;
+  renderFilters();
+  var list=all.filter(function(r){return state.filter<0||r.status===state.filter});
+  /* 간단 지도 */
+  var pts=all.filter(function(r){return r.lat!=null}),svg='<rect width="320" height="220" fill="var(--sky)"/>';
+  for(var g=1;g<8;g++)svg+='<line x1="'+g*40+'" y1="0" x2="'+g*40+'" y2="220" stroke="var(--sky2)"/>';
+  for(var h=1;h<6;h++)svg+='<line x1="0" y1="'+h*40+'" x2="320" y2="'+h*40+'" stroke="var(--sky2)"/>';
+  if(pts.length){
+    var la=pts.map(function(p){return p.lat}),lo=pts.map(function(p){return p.lng});
+    var a0=Math.min.apply(0,la),a1=Math.max.apply(0,la),o0=Math.min.apply(0,lo),o1=Math.max.apply(0,lo);
+    pts.forEach(function(p){
+      var x=pts.length===1||o1===o0?160:30+(p.lng-o0)/(o1-o0)*260,y=pts.length===1||a1===a0?110:190-(p.lat-a0)/(a1-a0)*160;
+      var c=["#FFC83D","#1E5EFF","#12B886"][p.status];
+      svg+='<circle cx="'+x+'" cy="'+y+'" r="11" fill="'+c+'" stroke="#fff" stroke-width="3"/>';
+    });
+  }else svg+='<text x="160" y="116" text-anchor="middle" fill="var(--sub)" font-size="15">아직 지도에 표시된 제보가 없어요</text>';
+  $("map").innerHTML=drawKorea(pts);
+  if(!list.length){$("items").innerHTML='<div class="item" style="text-align:center">🌱 아직 제보가 없어요.<br>첫 번째로 알려 줄래요?</div>';return}
+  $("items").innerHTML=list.map(function(r){
+    var t=tinfo(r.type),sel="";
+    if(state.canEdit)sel='<select class="field" data-id="'+r.id+'" style="margin-top:8px">'+STATUS.map(function(s,i){return'<option value="'+i+'"'+(i===r.status?" selected":"")+'>'+s+'</option>'}).join("")+'</select>';
+    return'<div class="item"><h3><span>'+t.ic+" "+esc(r.place)+'</span><span class="badge s'+r.status+'">'+STATUS[r.status]+'</span></h3>'+
+      '<div class="meta">'+t.t+" · "+ago(r.createdAt)+'</div>'+(r.desc?'<p>'+esc(r.desc)+'</p>':"")+
+      (r.photos&&r.photos.length?'<div class="imgs">'+r.photos.map(function(u){return'<img alt="제보 사진" src="'+esc(u)+'">'}).join("")+'</div>':"")+sel+'</div>';
+  }).join("");
+}
+$("items").addEventListener("change",function(e){
+  var id=e.target.dataset&&e.target.dataset.id;if(!id||!state.db)return;
+  state.db.collection("reports").doc(id).update({status:+e.target.value}).catch(function(){showMsg("상태를 바꾸지 못했어요.")});
+});
+
+/* 초기화: 저장소 연결 */
+(function(){
+  try{state.reports=JSON.parse(localStorage.getItem("sw_reports")||"[]")}catch(e){}
+  renderList();
+  if(!window.claude||!claude.use)return;
+  Promise.all([claude.use("db"),claude.use("user")]).then(function(x){
+    state.db=x[0];var u=x[1];state.canEdit=!!(u&&u.canEdit&&u.canEdit());
+    if(!state.db)return;
+    state.reports=[];
+    state.db.collection("reports").onSnapshot(function(s){
+      state.reports=s.docs.map(function(d){return d.data()});renderList();
+    },function(){});
+  }).catch(function(){});
+})();
+</script>
+</body>
+</html>
